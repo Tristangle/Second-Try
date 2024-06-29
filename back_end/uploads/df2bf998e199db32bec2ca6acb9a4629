@@ -1,0 +1,63 @@
+Coco Chanel , 1910, Paris, siège social à Londres
+Haute couture, parfums, maquillage, bjijoux
+Créativité, Innovation 
+
+
+-------------------------
+
+Questions : 
+Côté social - Très bons retours
+Combien d'alternant au total ? 60 alternants.
+Combien d'alternants dans l'équipe que je vais rejoindre ? 
+Quel grand projet m'attend ? 
+Qui est mon manager ? 
+Grande équipe IT ? 800 personnes chez Chanel Tech, 200 (dont 60 alternants) en France, 100 à Londres.
+Bonne ambiance ? 
+
+ 
+
+
+
+-------------------------------------------
+
+ 
+2. CMS (WordPress, Drupal)
+
+WordPress : Un système de gestion de contenu (CMS) qui permet de créer et de gérer facilement des sites web sans avoir besoin de savoir coder.
+Drupal : Un autre CMS, plus flexible et puissant, utilisé pour des sites web plus complexes et personnalisés.
+Exemple d'utilisation
+
+
+Drupal : Utilisé par des grandes organisations comme les sites gouvernementaux ou les entreprises avec des besoins spécifiques.
+
+
+3. Framework PHP (API Platform ou Symfony) 
+
+API Platform : Un outil pour créer des interfaces de programmation d'application (APIs), qui permettent à différents logiciels de se parler.
+
+
+
+4. Docker et Kubernetes
+
+
+Kubernetes : Un outil qui aide à gérer et à déployer des applications conteneurisées à grande échelle.
+ 
+5. Conception/Architecture de Projet
+Conception/Architecture de Projet : C'est la planification et l'organisation de la structure d'un projet logiciel pour s'assurer qu'il est bien construit et facile à maintenir.
+Exemple d'utilisation
+Architecture Microservices : Séparer une application en petits services indépendants pour une meilleure gestion et évolutivité, comme Netflix le fait pour ses différentes fonctionnalités (streaming, recommandations, etc.).
+
+
+6. Conception et Utilisation de Webservices
+ 
+Webservices : Des systèmes qui permettent à des applications différentes de communiquer entre elles via Internet.
+Exemple d'utilisation
+APIs REST : Utilisées par des applications mobiles pour récupérer des données d'un serveur, comme une app météo qui obtient les prévisions météorologiques.
+
+7. Authentification (SAML et/ou OAuth)
+ 
+SAML et OAuth : Des protocoles de sécurité pour vérifier l'identité des utilisateurs et autoriser l'accès à des ressources.
+ 
+
+OAuth : Utilisé pour se connecter à des applications tierces avec ton compte Google sans partager ton mot de passe.
+ 
