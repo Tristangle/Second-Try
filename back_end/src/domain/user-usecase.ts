@@ -12,6 +12,15 @@ export interface listUserFilter{
 export class UserUsecase{
     constructor(private readonly db: DataSource) { }
 
+
+    async getUserById(userId: number): Promise<User | null> {
+      const userRepository = this.db.getRepository(User);
+      const user = await userRepository.findOne({
+          where: { id: userId }
+      });
+      return user;
+  }
+  
     async userList(listUserFilter: listUserFilter): Promise<{ user: User[] }> {
         const query = this.db.getRepository(User)
           .createQueryBuilder('user')

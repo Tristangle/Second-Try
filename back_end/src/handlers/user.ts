@@ -51,6 +51,7 @@ export const UserHandler = (app: express.Express) => {
           res.status(500).send({ error: 'Internal error retry later' });
         }
       });
+      
 
     // Connexion d'un utilisateur
     app.post('/auth/login', async(req:Request, res: Response) => {

@@ -16,6 +16,11 @@ import { createVoteValidation, CreateVoteRequest, voteListValidation } from './v
 import { VoteUsecase } from '../domain/vote-usecase';
 
 import multer from 'multer'; 
+import { createTacheValidation } from "./validators/tache-validation";
+import { Tache } from "../database/entities/tache";
+import { TacheUseCase, UpdateTacheParams } from "../domain/tache-usecase";
+import { differenceInCalendarMonths } from "date-fns";
+import { User } from "../database/entities/user";
 const upload = multer({ dest: 'uploads/' });
 
 export const initRoutes = (app:express.Express) => {
@@ -80,6 +85,27 @@ export const initRoutes = (app:express.Express) => {
             res.status(500).send({ error: "Internal error" })
         }
     });
+    app.get('/user/:id', authMiddleware, async (req: Request, res: Response) => {
+      const userId = parseInt(req.params.id, 10);
+  
+      if (isNaN(userId)) {
+          return res.status(400).json({ error: 'Invalid user ID' });
+      }
+  
+      try {
+          const userUseCase = new UserUsecase(AppDataSource);
+          const user = await userUseCase.getUserById(userId);
+  
+          if (!user) {
+              return res.status(404).json({ error: 'User not found' });
+          }
+  
+          return res.status(200).json(user);
+      } catch (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+  });
 
 
     app.get('/documents', authMiddleware, roleMiddleware, async(req: Request, res:Response)=>{
@@ -230,6 +256,124 @@ export const initRoutes = (app:express.Express) => {
           res.status(500).json({ error: 'Internal error, please try again later.' });
         }
       });
+      app.post('/taches', authMiddleware, async (req: Request, res: Response) => {
+        const { error, value } = createTacheValidation.validate(req.body);
+    
+        if (error) {
+            return res.status(400).send(generateValidationErrorMessage(error.details));
+        }
+    
+        const { nom, description, date_debut, date_fin, type, createur, executeur } = value;
+    
+        try {
+            const tacheUseCase = new TacheUseCase(AppDataSource);
+    
+            // Récupérer les instances de User à partir des IDs
+            const createurId = createur || getUserIdFromToken(req);
+            const userRepository = AppDataSource.getRepository(User);
+            const createurUser = await userRepository.findOneBy({ id: createurId });
+            const executeurUser = await userRepository.findOneBy({ id: executeur });
+    
+            if (!createurUser || !executeurUser) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+    
+            // Créer une nouvelle tâche en utilisant les instances de User
+            const tache = await tacheUseCase.createTache({
+                nom,
+                description,
+                date_debut,
+                date_fin,
+                type,
+                createur: createurUser, 
+                executeur: executeurUser 
+            });
+            return res.status(201).json(tache);
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+      });
+      app.get('/taches/list', authMiddleware, async (req: Request, res:Response) => {
+        // Récupérer id utilisateur
+        const userId = getUserIdFromToken(req);
+        if (userId === undefined) {
+          return res.status(401).json({ error: 'Unauthorized' });
+      }
+      try {
+        const tacheUseCase = new TacheUseCase(AppDataSource);
+        const { taches } = await tacheUseCase.tacheList(userId);
+        return res.status(200).json(taches);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+      })
+
+      app.patch('/taches/:id', authMiddleware, async (req: Request, res: Response) => {
+        const tacheId = parseInt(req.params.id, 10);
+        const params: UpdateTacheParams = req.body;
+        
+        // Vérifier si l'id est valide
+        if (tacheId == null || isNaN(tacheId)) {
+            return res.status(400).json({ error: 'Invalid task ID' });
+        }
+    
+        try {
+            const tacheUseCase = new TacheUseCase(AppDataSource);
+            const tacheUpdated = await tacheUseCase.updateTache(tacheId, params);
+            
+            if (!tacheUpdated) {
+                return res.status(404).json({ error: 'Task not found' });
+            }
+    
+            return res.status(200).json(tacheUpdated);
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+    
+    app.delete('/taches/:id', authMiddleware, async (req: Request, res: Response) => {
+          const tacheId = parseInt(req.params.id, 10);
+          
+          // Vérifier si l'id est valide
+          if (tacheId == null || isNaN(tacheId)) {
+              return res.status(400).json({ error: 'Invalid task ID' });
+          }
+          
+          try {
+              const tacheUseCase = new TacheUseCase(AppDataSource);
+              await tacheUseCase.deleteTache(tacheId);
+              return res.status(200).json({ message: 'Task deleted successfully' });
+          } catch (err) {
+              console.error(err);
+              return res.status(500).json({ error: 'Internal Server Error' });
+          }
+      });
+      app.get('/taches/:id', authMiddleware, async (req: Request, res: Response) => {
+        const tacheId = parseInt(req.params.id, 10);
+    
+        if (isNaN(tacheId)) {
+            return res.status(400).json({ error: 'Invalid task ID' });
+        }
+    
+        try {
+            const tacheUseCase = new TacheUseCase(AppDataSource);
+            const tache = await tacheUseCase.getTacheById(tacheId);
+    
+            if (!tache) {
+                return res.status(404).json({ error: 'Task not found' });
+            }
+    
+            return res.status(200).json(tache);
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+
+      // 
 
     UserHandler(app)
 }
