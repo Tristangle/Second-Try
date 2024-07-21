@@ -65,15 +65,27 @@ export class TacheUseCase{
         }
     }
     async updateTache(id: number, params: UpdateTacheParams): Promise<Tache | null> {
-        const repo = this.db.getRepository(Tache)
-        const tacheFound = await repo.findOneBy({ id })
-
-        if (!tacheFound) return null;
-        Object.assign(tacheFound, params);
-
-        const tacheUpdated = await repo.save(tacheFound);
-
-        return tacheUpdated;
-    }
+      const repo = this.db.getRepository(Tache);
+      const tacheFound = await repo.findOne({
+          where: { id },
+          relations: ['createurTache', 'executeurTache']
+      });
+  
+      if (!tacheFound) return null;
+  
+      Object.assign(tacheFound, params);
+  
+      if (params.createur) {
+          tacheFound.createurTache = params.createur;
+      }
+      if (params.executeur) {
+          tacheFound.executeurTache = params.executeur;
+      }
+  
+      const tacheUpdated = await repo.save(tacheFound);
+  
+      return tacheUpdated;
+  }
+  
     // Delete de la tache
 }

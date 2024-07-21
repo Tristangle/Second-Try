@@ -28,7 +28,7 @@ export const UserHandler = (app: express.Express) => {
           const roleRepository = AppDataSource.getRepository(Role);
       
           // Rechercher le rôle par ID
-          const role = await roleRepository.findOneBy({ id: 3 }); // Utiliser l'ID du rôle que vous souhaitez assigner
+          const role = await roleRepository.findOneBy({ id: 2 }); // Utiliser l'ID du rôle que vous souhaitez assigner
       
           if (!role) {
             res.status(400).send({ error: 'Role not found' });
