@@ -14,7 +14,7 @@ export const createTacheValidation = Joi.object({
     nom: Joi.string().required(),
     description: Joi.string().required(),
     date_debut: Joi.date().required(),
-    date_fin: Joi.date().optional(),
+    date_fin: Joi.date().required(),
     type: Joi.string().required(),
     createur: Joi.number().optional(),
     executeur: Joi.number().required() 

@@ -14,13 +14,14 @@ import { createSurveyValidation, CreateSurveyRequest } from './validators/survey
 import { SurveyUsecase } from '../domain/survey-usecase';
 import { createVoteValidation, CreateVoteRequest, voteListValidation } from './validators/vote-validation';
 import { VoteUsecase } from '../domain/vote-usecase';
-
 import multer from 'multer'; 
 import { createTacheValidation } from "./validators/tache-validation";
 import { Tache } from "../database/entities/tache";
 import { TacheUseCase, UpdateTacheParams } from "../domain/tache-usecase";
 import { differenceInCalendarMonths } from "date-fns";
 import { User } from "../database/entities/user";
+import { ListRoleFilter, RoleUsecase } from "../domain/role-usecase";
+import { Role } from "../database/entities/roles";
 const upload = multer({ dest: 'uploads/' });
 
 export const initRoutes = (app:express.Express) => {
@@ -85,6 +86,22 @@ export const initRoutes = (app:express.Express) => {
             res.status(500).send({ error: "Internal error" })
         }
     });
+    app.get('/roles', authMiddleware, roleMiddleware, async (req, res) => {
+      const { page = 1, result = 10 } = req.query;
+
+      const filter: ListRoleFilter = {
+          page: Number(page),
+          result: Number(result)
+      };
+
+      try {
+        const roleUsecase = new RoleUsecase(AppDataSource)
+          const roles = await roleUsecase.roleList(filter);
+          res.json(roles);
+      } catch (error) {
+          res.status(500).json({ message: 'Error fetching roles' });
+      }
+  });
     app.get('/user/:id', authMiddleware, async (req: Request, res: Response) => {
       const userId = parseInt(req.params.id, 10);
   
