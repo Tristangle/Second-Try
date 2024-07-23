@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { UserHandler } from "./user";
 import { authMiddleware } from "./middleware/auth-middleware";
 import { roleMiddleware } from "./middleware/role-middleware";
-import { userListValidation } from "./validators/user-validator";
+import { updateUserValidation, userListValidation } from "./validators/user-validator";
 import { documentCreateValidation, documentListValidation } from "./validators/document-validation";
 import { generateValidationErrorMessage } from "./validators/generate-validation-message";
 import { UserUsecase } from "../domain/user-usecase";
@@ -389,6 +389,28 @@ export const initRoutes = (app:express.Express) => {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     });
+    app.put('/user/update', authMiddleware, async (req: Request, res: Response) => {
+      const userId = getUserIdFromToken(req); // ID de l'utilisateur extrait par le middleware
+      const updateParams = req.body;
+  
+      // Valider les paramètres de mise à jour
+      const { error } = updateUserValidation.validate(updateParams);
+      if (error) {
+          return res.status(400).json({ message: 'Invalid request data', error: error.details });
+      }
+  
+      try {
+        const userUsecase = new UserUsecase(AppDataSource);
+          const updatedUser = await userUsecase.update(userId!, updateParams);
+          if (updatedUser) {
+              res.json(updatedUser);
+          } else {
+              res.status(404).json({ message: 'User not found' });
+          }
+      } catch (error) {
+          res.status(500).json({ message: 'Internal server error'});
+      }
+  });
 
       // 
 

@@ -3,11 +3,17 @@ import { User } from "../database/entities/user";
 import { AppDataSource } from "../database/database";
 import { Err } from "joi";
 import { Role } from "../database/entities/roles";
-
+import { hash } from "bcrypt";
 export interface listUserFilter{
     page: number,
     result: number
 }
+export interface UpdateUserParams {
+  name?: string;
+  email?: string;
+  password?: string;
+}
+
 
 export class UserUsecase{
     constructor(private readonly db: DataSource) { }
@@ -54,5 +60,22 @@ export class UserUsecase{
         }
         return null;
       }
+      async update(userId: number, updateParams: UpdateUserParams): Promise<User | null> {
+        const userRepository = this.db.getRepository(User);
+        const user = await userRepository.findOneBy({ id: userId });
+
+        if (!user) {
+            return null;
+        }
+        if (updateParams.password) {
+          const hashedPassword = await hash(updateParams.password, 10);
+          updateParams.password = hashedPassword;
+      }
+
+        Object.assign(user, updateParams);
+        await userRepository.save(user);
+        return user;
+    }
+
     
 }

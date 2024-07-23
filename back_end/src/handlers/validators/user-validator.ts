@@ -32,6 +32,10 @@ export const userListValidation = Joi.object<userListValidationRequest>({
     result: Joi.number().min(1).optional()
 })
 
+
+
+
+
 export interface userUpdateRoleValidationRequest {
     roleId: number;
   }
@@ -39,3 +43,9 @@ export interface userUpdateRoleValidationRequest {
   export const userUpdateRoleValidation = Joi.object<userUpdateRoleValidationRequest>({
     roleId: Joi.number().integer().required()
   });
+
+  export const updateUserValidation = Joi.object({
+    username: Joi.string().min(3).max(30),
+    email: Joi.string().email(),
+    password: Joi.string().min(8)
+});
