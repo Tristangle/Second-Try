@@ -411,7 +411,14 @@ export const initRoutes = (app:express.Express) => {
           res.status(500).json({ message: 'Internal server error'});
       }
   });
-
+  app.get('/getUserId/', authMiddleware, (req: Request, res: Response) => {
+    const userId = getUserIdFromToken(req);
+    if (userId) {
+      res.json({ userId });
+    } else {
+      res.status(404).send('Utilisateur non trouvé');
+    }
+  });
       // 
 
     UserHandler(app)
