@@ -327,7 +327,7 @@ export const initRoutes = (app:express.Express) => {
     }
       })
 
-      app.patch('/taches/:id', authMiddleware, async (req: Request, res: Response) => {
+      app.put('/taches/:id', authMiddleware, async (req: Request, res: Response) => {
         const tacheId = parseInt(req.params.id, 10);
         const params: UpdateTacheParams = req.body;
         
