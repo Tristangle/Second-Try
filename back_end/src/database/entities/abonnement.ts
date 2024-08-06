@@ -7,6 +7,12 @@ export enum AbonnementStatus {
     Inactive = "Inactive",
     Delete = "Delete"  
 }
+export enum AbonnementList {
+    Free = "Free",
+    BagPacker = "Bag Packer",
+    Explorator = "Explorator"
+}
+
 @Entity()
 export class Abonnement {
   @PrimaryGeneratedColumn()
