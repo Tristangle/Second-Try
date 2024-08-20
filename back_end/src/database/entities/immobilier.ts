@@ -24,8 +24,8 @@ export class Immobilier {
   @ManyToOne(() => User, user => user.ownedProperties)
   owner: User;
 
-  @ManyToOne(() => User, user => user.rentedProperties)
-  renter: User;
+  @ManyToOne(() => User, user => user.rentedProperties, {nullable: true})
+  renter?: User | null;
 
   @OneToMany(() => Facture, facture => facture.immobilier)
   factures: Facture[];

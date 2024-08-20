@@ -27,8 +27,14 @@ export class Abonnement {
   @Column('decimal')
   price: number;
 
+  @Column('decimal')
+  yearPrice: number;
+
   @Column()
   duration: number; 
+
+  @Column()
+  yearDuration: number;
 
   @Column()
   startDate: Date;
@@ -65,7 +71,9 @@ export class Abonnement {
     name:string,
     description:string,
     price:number,
+    yearPrice: number,
     duration:number,
+    yearDuration: number,
     startDate:Date,
     endDate:Date,
     status:AbonnementStatus,
@@ -82,7 +90,9 @@ export class Abonnement {
     this.name = name;
     this.description = description;
     this.price = price;
+    this.yearPrice = yearPrice;
     this.duration = duration;
+    this.yearDuration = yearDuration;
     this.startDate = startDate;
     this.endDate = endDate;
     this.status = status;

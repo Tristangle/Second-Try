@@ -7,7 +7,9 @@ export interface createAbonnementRequest {
     name: string;
     description: string;
     price: number;
+    yearPrice: number;
     duration: number;
+    yearDuration: number;
     startDate: Date;
     endDate: Date;
     status: AbonnementStatus;
@@ -17,13 +19,16 @@ export interface createAbonnementRequest {
       value?: number;
     }[];
     createdAt: Date;
+    updatedAt: Date;
   }
 // Create Abonnement Request
 export const createAbonnementValidation = Joi.object<createAbonnementRequest>({
     name: Joi.string().min(3).max(255).required(),
     description: Joi.string().required(),
-    price: Joi.number().positive().required(),
+    price: Joi.number().required(),
+    yearPrice: Joi.number().required(),
     duration: Joi.number().integer().positive().required(),
+    yearDuration: Joi.number().integer().positive().required(),
     startDate: Joi.date().required(),
     endDate: Joi.date().required(),
     status: Joi.string().valid(...Object.values(AbonnementStatus)).required(),
@@ -34,14 +39,17 @@ export const createAbonnementValidation = Joi.object<createAbonnementRequest>({
         value: Joi.number().optional(),
       })
     ).required(),
-    createdAt: Joi.date().required(),
+    createdAt: Joi.date().optional(),
+    updatedAt: Joi.date().optional()
   });
 // Update Abonnement Request Validation
 export interface updateAbonnementRequest {
     name?: string;
     description?: string;
     price?: number;
+    yearPrice?: number;
     duration?: number;
+    yearDuration: number;
     startDate?: Date;
     endDate?: Date;
     status?: AbonnementStatus;
@@ -57,7 +65,9 @@ export const updateAbonnementValidation = Joi.object<updateAbonnementRequest>({
     name: Joi.string().min(3).max(255).optional(),
     description: Joi.string().optional(),
     price: Joi.number().positive().optional(),
+    yearPrice: Joi.number().positive().optional(),
     duration: Joi.number().integer().positive().optional(),
+    yearDuration: Joi.number().integer().positive().optional(),
     startDate: Joi.date().optional(),
     endDate: Joi.date().optional(),
     status: Joi.string().valid(...Object.values(AbonnementStatus)).optional(),
@@ -68,5 +78,17 @@ export const updateAbonnementValidation = Joi.object<updateAbonnementRequest>({
         value: Joi.number().optional(),
       })
     ).optional(),
-    updatedAt: Joi.date().required(),
-  });
+    updatedAt: Joi.date().optional(),
+});
+
+// List Abonnements with Pagination Validation Request
+export interface abonnementListValidationRequest {
+  page?: number;
+  result?: number;
+}
+
+// List Abonnement with Pagination Validation
+export const abonnementListValidation = Joi.object<abonnementListValidationRequest>({
+  page: Joi.number().min(1).optional(),
+  result: Joi.number().min(1).optional()
+});

@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { Role } from "../database/entities/roles";
+import { Role } from "../../database/entities/role";
 
 export interface ListRoleFilter {
     page: number;

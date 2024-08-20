@@ -10,8 +10,8 @@ export interface createInspectionValidationRequest {
   renterId: number;
   validation: boolean;
   details: string;
-  documents: number[];
   createdAt: Date;
+  updatedAt: Date;
 }
 
 // Create Inspection Validation
@@ -24,8 +24,8 @@ export const createInspectionValidation = Joi.object<createInspectionValidationR
   renterId: Joi.number().integer().required(),
   validation: Joi.boolean().required(),
   details: Joi.string().required(),
-  documents: Joi.array().items(Joi.number().integer()).optional(),
-  createdAt: Joi.date().required()
+  createdAt: Joi.date().optional(),
+  updatedAt: Joi.date().optional()
 });
 
 // Update Inspection Validation Request
@@ -53,7 +53,7 @@ export const updateInspectionValidation = Joi.object<updateInspectionValidationR
   validation: Joi.boolean().optional(),
   details: Joi.string().optional(),
   documents: Joi.array().items(Joi.number().integer()).optional(),
-  updatedAt: Joi.date().required()
+  updatedAt: Joi.date().optional()
 });
 // List Inspections with Pagination Validation Request
 export interface inspectionListValidationRequest {

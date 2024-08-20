@@ -8,16 +8,9 @@ export interface createImmobilierValidationRequest {
     adresse: string;
   };
   ownerId: number;
-  renterId: number;
-  factures?: number[];
-  devis?: number[];
-  interventions?: number[];
-  reservations?: number[];
-  inspections?: number[];
-  images?: {
-    url: string;
-  }[];
+  renterId?: number;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 // Create Immobilier Validation
@@ -29,15 +22,8 @@ export const createImmobilierValidation = Joi.object<createImmobilierValidationR
   }).required(),
   ownerId: Joi.number().integer().required(),
   renterId: Joi.number().integer().optional(),
-  factures: Joi.array().items(Joi.number().integer()).optional(),
-  devis: Joi.array().items(Joi.number().integer()).optional(),
-  interventions: Joi.array().items(Joi.number().integer()).optional(),
-  reservations: Joi.array().items(Joi.number().integer()).optional(),
-  inspections: Joi.array().items(Joi.number().integer()).optional(),
-  images: Joi.array().items(Joi.object({
-    url: Joi.string().uri().required()
-  })).optional(),
-  createdAt: Joi.date().required()
+  createdAt: Joi.date().optional(),
+  updatedAt: Joi.date().optional()
 });
 
 // Update Immobilier Validation Request
@@ -77,7 +63,7 @@ export const updateImmobilierValidation = Joi.object<updateImmobilierValidationR
   images: Joi.array().items(Joi.object({
     url: Joi.string().uri().optional()
   })).optional(),
-  updatedAt: Joi.date().required()
+  updatedAt: Joi.date().optional()
 });
 // List Immobilier with Pagination Validation Request
 export interface immobilierListValidationRequest {

@@ -8,10 +8,9 @@ export interface createInterventionValidationRequest {
   immobilierId: number;
   factureId?: number;
   devisId?: number;
-  documents: number[];
-  prestations: number[];
   price: number;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 // Create Intervention Validation
@@ -22,10 +21,9 @@ export const createInterventionValidation = Joi.object<createInterventionValidat
   immobilierId: Joi.number().integer().required(),
   factureId: Joi.number().integer().optional(),
   devisId: Joi.number().integer().optional(),
-  documents: Joi.array().items(Joi.number().integer()).optional(),
-  prestations: Joi.array().items(Joi.number().integer()).required(),
   price: Joi.number().required(),
-  createdAt: Joi.date().required()
+  createdAt: Joi.date().optional(),
+  updatedAt: Joi.date().optional()
 });
 
 // Update Intervention Validation Request
@@ -36,7 +34,6 @@ export interface updateInterventionValidationRequest {
   immobilierId?: number;
   factureId?: number;
   devisId?: number;
-  documents?: number[];
   prestations?: number[];
   price?: number;
   updatedAt: Date;
@@ -50,10 +47,9 @@ export const updateInterventionValidation = Joi.object<updateInterventionValidat
   immobilierId: Joi.number().integer().optional(),
   factureId: Joi.number().integer().optional(),
   devisId: Joi.number().integer().optional(),
-  documents: Joi.array().items(Joi.number().integer()).optional(),
   prestations: Joi.array().items(Joi.number().integer()).optional(),
   price: Joi.number().optional(),
-  updatedAt: Joi.date().required()
+  updatedAt: Joi.date().optional()
 });
 // List Interventions with Pagination Validation Request
 export interface interventionListValidationRequest {

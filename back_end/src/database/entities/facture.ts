@@ -3,7 +3,6 @@ import { User } from './user';
 import { Document } from './document';
 import { Immobilier } from './immobilier';
 import { Intervention } from './intervention';
-import { Reviews } from '@mui/icons-material';
 
 export enum TauxTVA {
   TVA5 = '5%',
@@ -28,8 +27,8 @@ export class Facture {
   @ManyToOne(() => User, user => user.facturesEmises)
   emetteur: User;
 
-  @ManyToOne(() => User, user => user.facturesRecues)
-  receveur: User;
+  @ManyToOne(() => User, user => user.facturesRecues, {nullable: true, onDelete: 'SET NULL'})
+  receveur: User | null;
 
   @CreateDateColumn()
   date: Date;

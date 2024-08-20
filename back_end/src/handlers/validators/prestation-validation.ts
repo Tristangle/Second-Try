@@ -9,6 +9,7 @@ export interface createPrestationValidationRequest {
   interventionId: number;
   prestataireId: number;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 // Create Prestation Validation
@@ -19,7 +20,8 @@ export const createPrestationValidation = Joi.object<createPrestationValidationR
   date: Joi.date().required(),
   interventionId: Joi.number().integer().required(),
   prestataireId: Joi.number().integer().required(),
-  createdAt: Joi.date().required()
+  createdAt: Joi.date().optional(),
+  updatedAt: Joi.date().optional()
 });
 
 // Update Prestation Validation Request
@@ -41,5 +43,5 @@ export const updatePrestationValidation = Joi.object<updatePrestationValidationR
   date: Joi.date().optional(),
   interventionId: Joi.number().integer().optional(),
   prestataireId: Joi.number().integer().optional(),
-  updatedAt: Joi.date().required()
+  updatedAt: Joi.date().optional()
 });

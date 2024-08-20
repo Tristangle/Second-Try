@@ -15,6 +15,7 @@ export interface devisValidationRequest {
       reduction?: number;
     };
     createdAt: Date;
+    updatedAt: Date;
   }
 // Create devis Validation
 export const createDevisValidation = Joi.object<devisValidationRequest>({
@@ -30,11 +31,13 @@ export const createDevisValidation = Joi.object<devisValidationRequest>({
       abonnement: Joi.string().valid(...Object.values(AbonnementList)).required(),
       reduction: Joi.number().optional()
     }).required(),
-    createdAt: Joi.date().required()
+    createdAt: Joi.date().optional(),
+    updatedAt: Joi.date().optional()
   });
 // Update Devis Validation Request
 export interface updateDevisValidationRequest {
     name?: string;
+    immobilierId?: number;
     userId?: number;
     date?: Date;
     content?: {
@@ -50,6 +53,7 @@ export interface updateDevisValidationRequest {
 // Update Devis Validation
 export const updateDevisValidation = Joi.object<updateDevisValidationRequest>({
     name: Joi.string().min(3).max(16).optional(),
+    immobilierId: Joi.number().integer().optional(),
     userId: Joi.number().integer().optional(),
     date: Joi.date().optional(),
     content: Joi.object({
@@ -60,5 +64,5 @@ export const updateDevisValidation = Joi.object<updateDevisValidationRequest>({
       abonnement: Joi.string().valid(...Object.values(AbonnementList)).optional(),
       reduction: Joi.number().optional()
     }).optional(),
-    updatedAt: Joi.date().required()
-  });
+    updatedAt: Joi.date().optional()
+});

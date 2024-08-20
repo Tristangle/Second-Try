@@ -34,40 +34,40 @@ export class User {
   role: Role;
 
   @OneToMany(() => Document, document => document.createdBy)
-  documents: Document[];
+  documents?: Document[];
 
   @OneToMany(() => Facture, facture => facture.emetteur)
-  facturesEmises: Facture[];
+  facturesEmises?: Facture[];
 
   @OneToMany(() => Facture, facture => facture.receveur)
-  facturesRecues: Facture[];
+  facturesRecues?: Facture[];
 
   @OneToMany(() => Immobilier, immobilier => immobilier.owner)
-  ownedProperties: Immobilier[];
+  ownedProperties?: Immobilier[];
 
   @OneToMany(() => Immobilier, immobilier => immobilier.renter)
-  rentedProperties: Immobilier[];
+  rentedProperties?: Immobilier[];
 
   @OneToMany(() => Inspection, inspection => inspection.inspector)
-  inspectionsAsInspector: Inspection[];
+  inspectionsAsInspector?: Inspection[];
 
   @OneToMany(() => Inspection, inspection => inspection.renter)
-  inspectionsAsRenter: Inspection[];
+  inspectionsAsRenter?: Inspection[];
 
   @OneToMany(() => Prestation, prestation => prestation.prestataire)
-  prestations: Prestation[];
+  prestations?: Prestation[];
 
   @OneToMany(() => Reservation, reservation => reservation.reserveur)
-  reservations: Reservation[];
+  reservations?: Reservation[];
 
   @OneToMany(() => Devis, devis => devis.user)
-  devis: Devis[];
+  devis?: Devis[];
 
   @OneToMany(() => UserAbonnement, userAbonnement => userAbonnement.user)
   userAbonnement: UserAbonnement[];
 
   @OneToMany(() => UserDocument, userDocument => userDocument.user)
-  userDocuments: UserDocument[];
+  userDocuments?: UserDocument[];
 
   constructor(
     id: number,
@@ -76,18 +76,18 @@ export class User {
     password: string,
     token: Token[],
     role: Role,
-    documents: Document[],
-    facturesEmises: Facture[],
-    facturesRecues: Facture[],
-    ownedProperties: Immobilier[],
-    rentedProperties: Immobilier[],
-    inspectionsAsInspector: Inspection[],
-    inspectionsAsRenter: Inspection[],
-    prestations: Prestation[],
-    reservations: Reservation[],
-    devis: Devis[],
     userAbonnement: UserAbonnement[],
-    userDocuments: UserDocument[]
+    documents?: Document[],
+    facturesEmises?: Facture[],
+    facturesRecues?: Facture[],
+    ownedProperties?: Immobilier[],
+    rentedProperties?: Immobilier[],
+    inspectionsAsInspector?: Inspection[],
+    inspectionsAsRenter?: Inspection[],
+    prestations?: Prestation[],
+    reservations?: Reservation[],
+    devis?: Devis[],
+    userDocuments?: UserDocument[]
   ) {
     this.id = id;
     this.username = username;

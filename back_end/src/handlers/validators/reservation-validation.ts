@@ -7,6 +7,7 @@ export interface createReservationValidationRequest {
   reserveurId: number;
   immobilierId: number;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 // Create Reservation Validation
@@ -15,7 +16,8 @@ export const createReservationValidation = Joi.object<createReservationValidatio
   dateFin: Joi.date().required(),
   reserveurId: Joi.number().integer().required(),
   immobilierId: Joi.number().integer().required(),
-  createdAt: Joi.date().required()
+  createdAt: Joi.date().optional(),
+  updatedAt: Joi.date().optional()
 });
 
 // Update Reservation Validation Request
@@ -33,7 +35,7 @@ export const updateReservationValidation = Joi.object<updateReservationValidatio
   dateFin: Joi.date().optional(),
   reserveurId: Joi.number().integer().optional(),
   immobilierId: Joi.number().integer().optional(),
-  updatedAt: Joi.date().required()
+  updatedAt: Joi.date().optional()
 });
 // List Reservations with Pagination Validation Request
 export interface reservationListValidationRequest {

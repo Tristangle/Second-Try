@@ -63,7 +63,7 @@ export class Document {
   @OneToMany(() => UserDocument, userDocument => userDocument.document)
   userDocuments: UserDocument[];
 
-  @ManyToOne(() => User, user => user.documents)
+  @ManyToOne(() => User, user => user.documents, {nullable: false})
   createdBy: User;
 
   constructor(

@@ -9,7 +9,6 @@ export interface createFactureValidationRequest {
   emetteurId: number;
   receveurId: number;
   date: Date;
-  documents: number[];
   emailEmetteur: string;
   adresseEmetteur: string;
   content: {
@@ -21,6 +20,7 @@ export interface createFactureValidationRequest {
     totalTTC: number;
   }[];
   createdAt: Date;
+  updatedAt: Date;
 }
 
 // Create Facture Validation
@@ -31,7 +31,6 @@ export const createFactureValidation = Joi.object<createFactureValidationRequest
   emetteurId: Joi.number().integer().required(),
   receveurId: Joi.number().integer().required(),
   date: Joi.date().required(),
-  documents: Joi.array().items(Joi.number().integer()).required(),
   emailEmetteur: Joi.string().email().required(),
   adresseEmetteur: Joi.string().required(),
   content: Joi.array().items(
@@ -44,7 +43,8 @@ export const createFactureValidation = Joi.object<createFactureValidationRequest
       totalTTC: Joi.number().required()
     })
   ).required(),
-  createdAt: Joi.date().required()
+  createdAt: Joi.date().optional(),
+  updatedAt: Joi.date().optional()
 });
 
 // Update Facture Validation Request
@@ -55,7 +55,6 @@ export interface updateFactureValidationRequest {
   emetteurId?: number;
   receveurId?: number;
   date?: Date;
-  documents?: number[];
   emailEmetteur?: string;
   adresseEmetteur?: string;
   content?: {
@@ -77,7 +76,6 @@ export const updateFactureValidation = Joi.object<updateFactureValidationRequest
   emetteurId: Joi.number().integer().optional(),
   receveurId: Joi.number().integer().optional(),
   date: Joi.date().optional(),
-  documents: Joi.array().items(Joi.number().integer()).optional(),
   emailEmetteur: Joi.string().email().optional(),
   adresseEmetteur: Joi.string().optional(),
   content: Joi.array().items(
@@ -90,5 +88,5 @@ export const updateFactureValidation = Joi.object<updateFactureValidationRequest
       totalTTC: Joi.number().optional()
     })
   ).optional(),
-  updatedAt: Joi.date().required()
+  updatedAt: Joi.date().optional()
 });
