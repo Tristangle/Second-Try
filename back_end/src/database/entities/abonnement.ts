@@ -39,7 +39,7 @@ export class Abonnement {
   @Column()
   startDate: Date;
 
-  @Column()
+  @Column({nullable:true})
   endDate: Date;
 
   @Column({

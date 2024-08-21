@@ -12,6 +12,7 @@ export interface createUserAbonnementValidationRequest {
 }
 
 export interface updateUserAbonnementValidationRequest {
+  abonnementId?: number;
   status?: UserAbonnementStatus;
   startDate?: Date;
   endDate?: Date;
@@ -29,6 +30,7 @@ export const createUserAbonnementValidation = Joi.object<createUserAbonnementVal
 });
 
 export const updateUserAbonnementValidation = Joi.object<updateUserAbonnementValidationRequest>({
+  abonnementId: Joi.number().integer().optional(),
   status: Joi.string().valid(...Object.values(UserAbonnementStatus)).optional(),
   startDate: Joi.date().optional(),
   endDate: Joi.date().optional(),

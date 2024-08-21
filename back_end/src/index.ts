@@ -7,7 +7,8 @@ import { AppDataSource } from "./database/database";
 import 'dotenv/config';
 import "reflect-metadata" 
 import { swaggerDocs } from "./swagger/swagger";
-
+import { abonnementManager } from "./schedulers/abonnementManager";
+import { AbonnementManager } from "./schedulers/abonnementManager";
 
 const main = async () => {
     const app = express()
@@ -26,6 +27,8 @@ const main = async () => {
 
         await AppDataSource.initialize()
         console.error("well connected to database")
+        const subManager = new AbonnementManager();
+        subManager.start();
     } catch (error) {
         console.log(error)
         console.error("Cannot contact database")

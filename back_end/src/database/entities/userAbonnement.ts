@@ -29,7 +29,7 @@ export class UserAbonnement {
   @Column()
   startDate: Date;
 
-  @Column()
+  @Column({nullable:true})
   endDate: Date;
 
   constructor(
