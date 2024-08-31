@@ -1,0 +1,110 @@
+.reservation-page {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1, h2 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .success-message {
+    color: green;
+    margin-top: 10px;
+  }
+  
+  .confirm-reservation-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .confirm-reservation-button:hover {
+    background-color: #218838;
+  }
+  
+  .reserved-tile {
+    background-color: #ffcccc !important;
+    color: #ff0000 !important;
+    font-weight: bold;
+  }
+  
+  .react-calendar__tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .react-calendar__tile:disabled {
+    background-color: #f0f0f0;
+    color: #d0d0d0;
+  }
+  
+  .react-calendar__tile--now {
+    background-color: #ffffcc;
+    color: #333;
+  }
+  
+  .react-calendar__tile--active {
+    background-color: #99ccff !important;
+    color: #fff !important;
+  }
+  
+  .react-calendar__tile--reserved {
+    background-color: #ffcccc !important;
+    color: #ff0000 !important;
+  }
+  
+  .react-calendar__month-view__days__day {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .react-calendar__month-view__days__day--weekend {
+    color: #d10000;
+  }
+  
+  /* Style de la barre de navigation du calendrier */
+  .react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .react-calendar__navigation__label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .react-calendar__navigation__arrow {
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  .react-calendar__navigation__arrow:hover {
+    background-color: #ddd;
+    border-radius: 50%;
+  }
+  

@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Intervention } from './intervention';
 import { User } from './user';
+import { Notation } from './notation';
+import { InterventionPrestation } from './interventionPrestation';
 
 @Entity()
 export class Prestation {
@@ -19,8 +21,14 @@ export class Prestation {
   @Column()
   date: Date;
 
-  @ManyToOne(() => Intervention, intervention => intervention.prestations)
-  intervention: Intervention;
+  @Column()
+  exploratorOnly: boolean;
+
+  @OneToMany(() => Notation, notation => notation.prestation)
+  notations?: Notation[];
+
+  @OneToMany(() => InterventionPrestation, interventionPrestation => interventionPrestation.prestation)
+  interventionPrestations: InterventionPrestation[];
 
   @ManyToOne(() => User, prestataire => prestataire.prestations)
   prestataire: User;
@@ -31,15 +39,19 @@ export class Prestation {
     description: string,
     cost: number,
     date: Date,
-    intervention: Intervention,
-    prestataire: User
+    exploratorOnly: boolean,
+    interventionPrestations: InterventionPrestation[],
+    prestataire: User,
+    notations?: Notation[]
   ) {
     this.id = id;
     this.type = type;
     this.description = description;
     this.cost = cost;
     this.date = date;
-    this.intervention = intervention;
+    this.exploratorOnly = exploratorOnly;
+    this.notations = notations;
+    this.interventionPrestations = interventionPrestations;
     this.prestataire = prestataire;
   }
 }

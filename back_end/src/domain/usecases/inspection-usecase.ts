@@ -6,6 +6,8 @@ import { User } from "../../database/entities/user";
 import { createInspectionValidationRequest, inspectionListValidationRequest, updateInspectionValidationRequest } from "../../handlers/validators/inspection-validation";
 import { documentUseCase } from "./document-usecase";
 import { Document } from "../../database/entities/document";
+import { UserDocumentUseCase } from "./userDocument-usecase";
+import { UserDocument } from "../../database/entities/userDocument";
 
 export class inspectionUseCase {
     constructor(private readonly db: DataSource) { }
@@ -80,23 +82,38 @@ export class inspectionUseCase {
                 return await inspectionRepository.save(inspection);
     
             }
-        async deleteInspection(inspectionId: number): Promise<void> {
+            async deleteInspection(inspectionId: number): Promise<void> {
                 const inspectionRepository = this.db.getRepository(Inspection);
                 const documentRepository = this.db.getRepository(Document);
+                const userDocumentRepository = this.db.getRepository(UserDocument);
             
+                // Rechercher l'inspection
                 const inspectionSearch = await inspectionRepository.findOneBy({ id: inspectionId });
             
                 if (inspectionSearch) {
+                    // Rechercher le document associé à l'inspection
                     const documentSearch = await documentRepository
                         .createQueryBuilder("document")
                         .where("document.inspectionId = :inspectionId", { inspectionId })
                         .getOne();
             
                     if (documentSearch) {
+                        // Rechercher toutes les entrées user_document associées à ce document
+                        const userDocuments = await userDocumentRepository.find({ where: { document: {id: documentSearch.id } } });
+            
+                        // Supprimer chaque user_document qui fait référence à ce document
+                        for (const userDocument of userDocuments) {
+                            await userDocumentRepository.remove(userDocument);
+                        }
+            
+                        // Supprimer ensuite le document lui-même
                         await documentRepository.remove(documentSearch);
                     }
             
+                    // Enfin, supprimer l'inspection
                     await inspectionRepository.remove(inspectionSearch);
                 }
             }
+            
+            
 }

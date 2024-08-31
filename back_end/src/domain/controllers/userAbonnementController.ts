@@ -20,27 +20,31 @@ export class UserAbonnementController {
         }
     }
 
-    // Update an existing UserAbonnement
-    async updateUserAbonnement(req: Request, res: Response): Promise<Response> {
-        try {
-            const userId = parseInt(req.params.userId, 10);
-            const updateData: updateUserAbonnementValidationRequest = req.body;
+// Update an existing UserAbonnement
+async updateUserAbonnement(req: Request, res: Response): Promise<Response> {
+    try {
+        const userId = parseInt(req.params.userId, 10);
+        const updateData: updateUserAbonnementValidationRequest = req.body;
 
-            if (isNaN(userId)) {
-                return res.status(400).json({ error: 'Invalid userId' });
-            }
-
-            const updatedUserAbonnement = await this.userAbonnementUsecase.updateUserAbonnement(userId, updateData);
-
-            if (!updatedUserAbonnement) {
-                return res.status(404).json({ error: 'UserAbonnement not found' });
-            }
-
-            return res.status(200).json(updatedUserAbonnement);
-        } catch (err) {
-            return res.status(500).json({ error: 'Internal Server Error', details: (err as Error).message });
+        if (isNaN(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
         }
+
+        // Assurez-vous que `isAnnual` est bien défini, sinon donnez-lui une valeur par défaut.
+        const isAnnual = req.body.isAnnual !== undefined ? req.body.isAnnual : false;
+
+        const updatedUserAbonnement = await this.userAbonnementUsecase.updateUserAbonnement(userId, updateData, isAnnual);
+
+        if (!updatedUserAbonnement) {
+            return res.status(404).json({ error: 'UserAbonnement not found' });
+        }
+
+        return res.status(200).json(updatedUserAbonnement);
+    } catch (err) {
+        return res.status(500).json({ error: 'Internal Server Error', details: (err as Error).message });
     }
+}
+
 
 
     // Delete an existing UserAbonnement
@@ -65,18 +69,23 @@ export class UserAbonnementController {
         }
     }
 
-    // Get a specific UserAbonnement by ID
+    // Get a specific UserAbonnement by userId
     async getUserAbonnementById(req: Request, res: Response): Promise<Response> {
-        const userAbonnementId = parseInt(req.params.id, 10);
+        // Convertir userId en nombre et vérifier la validité
+        const userId = parseInt(req.params.userId, 10);
+
+        if (isNaN(userId)) {
+            return res.status(400).json({ error: "Invalid user ID" });
+        }
 
         try {
-            const userAbonnement = await this.userAbonnementUsecase.getUserAbonnementById(userAbonnementId);
+            const userAbonnement = await this.userAbonnementUsecase.getAbonnementByUserId(userId);
             if (!userAbonnement) {
                 return res.status(404).json({ error: "UserAbonnement not found" });
             }
             return res.status(200).json(userAbonnement);
         } catch (err) {
-            return res.status(400).json({ error: "Failed to retrieve UserAbonnement", details: (err as Error).message });
+            return res.status(500).json({ error: "Failed to retrieve UserAbonnement", details: (err as Error).message });
         }
     }
 }

@@ -12,6 +12,8 @@ import { Prestation } from './prestation';
 import { Reservation } from './reservation';
 import { Devis } from './devis';
 import { UserDocument } from './userDocument';
+import { Bannissement } from './bannissement';
+import { Notation } from './notation';
 
 @Entity()
 export class User {
@@ -68,6 +70,15 @@ export class User {
 
   @OneToMany(() => UserDocument, userDocument => userDocument.user)
   userDocuments?: UserDocument[];
+  
+  @OneToMany(() => Bannissement, bannissement => bannissement.user)
+  bannissements?: Bannissement[];
+
+  @OneToMany(() => Bannissement, bannissement => bannissement.initiatedBy)
+  banInitiatedBy?: Bannissement[];
+  
+  @OneToMany(() => Notation, notation => notation.user, {nullable: true})
+  notations?: Notation[];
 
   constructor(
     id: number,
@@ -87,7 +98,10 @@ export class User {
     prestations?: Prestation[],
     reservations?: Reservation[],
     devis?: Devis[],
-    userDocuments?: UserDocument[]
+    userDocuments?: UserDocument[],
+    bannissements?: Bannissement[],
+    banInitiatedBy?: Bannissement[],
+    notations?: Notation[]
   ) {
     this.id = id;
     this.username = username;
@@ -107,5 +121,8 @@ export class User {
     this.devis = devis;
     this.userAbonnement = userAbonnement;
     this.userDocuments = userDocuments;
+    this.bannissements = bannissements;
+    this.banInitiatedBy = banInitiatedBy;
+    this.notations = notations;
   }
 }

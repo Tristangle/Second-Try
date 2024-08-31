@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { User } from './user';
 import { Facture } from './facture';
 import { Devis } from './devis';
@@ -21,10 +21,13 @@ export class Immobilier {
     adresse: string;
   };
 
-  @ManyToOne(() => User, user => user.ownedProperties)
+  @Column('decimal')
+  dailyCost: number;
+
+  @ManyToOne(() => User, user => user.ownedProperties, {eager: true})
   owner: User;
 
-  @ManyToOne(() => User, user => user.rentedProperties, {nullable: true})
+  @ManyToOne(() => User, user => user.rentedProperties, { nullable: true })
   renter?: User | null;
 
   @OneToMany(() => Facture, facture => facture.immobilier)
@@ -45,10 +48,18 @@ export class Immobilier {
   @OneToMany(() => Image, image => image.immobilier, { cascade: true })
   images: Image[];
 
+  @Column({
+    type: 'enum',
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  })
+  status: string;
+
   constructor(
     id: number,
     name: string,
     content: { description: string; adresse: string },
+    dailyCost: number, 
     owner: User,
     renter: User,
     factures: Facture[],
@@ -56,11 +67,13 @@ export class Immobilier {
     interventions: Intervention[],
     reservations: Reservation[],
     inspections: Inspection[],
-    images: Image[]
+    images: Image[],
+    status: string
   ) {
     this.id = id;
     this.name = name;
     this.content = content;
+    this.dailyCost = dailyCost; 
     this.owner = owner;
     this.renter = renter;
     this.factures = factures;
@@ -69,5 +82,6 @@ export class Immobilier {
     this.reservations = reservations;
     this.inspections = inspections;
     this.images = images;
+    this.status = 'pending';
   }
 }

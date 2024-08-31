@@ -7,9 +7,18 @@ import { Document } from "../../database/entities/document";
 import { User } from "../../database/entities/user";
 import { createFactureValidationRequest, updateFactureValidationRequest } from "../../handlers/validators/facture-validation";
 import { documentUseCase } from "./document-usecase";
+import { EmailService } from "../services/EmailService";
+import { PDFService } from "../services/PDFService";
 
 export class factureUseCase {
-    constructor(private readonly db: DataSource) {}
+    private emailService: EmailService;
+    private pdfService: PDFService;
+
+    constructor(private readonly db: DataSource) {
+        this.emailService = new EmailService();
+        this.pdfService = new PDFService();
+
+    }
 
     // Create Facture
     async createFacture(createFacture: createFactureValidationRequest): Promise<Facture> {
@@ -49,9 +58,11 @@ export class factureUseCase {
             createdAt: new Date(),
             updatedAt: new Date()
         };
+
     
         const savedFacture = await factureRepository.save(newFacture as Facture);
-    
+        this.pdfService.generateInvoicePDF(savedFacture);
+
         // Création du document lié
         const documentUsecase = new documentUseCase(AppDataSource);
         const docDataTransfert = {
@@ -64,7 +75,7 @@ export class factureUseCase {
         const fileUrl = `${process.env.SERVER_URL}:${process.env.PORT}/facture/${createFacture.emetteurId}/${savedFacture.id}`;
         
         await documentUsecase.createDocument(docDataTransfert, fileUrl);
-    
+        await this.emailService.sendInvoiceOrDevis(receveur.email, savedFacture);
         return savedFacture;
     }
     
@@ -141,5 +152,27 @@ export class factureUseCase {
             await factureRepository.remove(factureSearch);
         }
     }
+    async getFactureById(factureId: number): Promise<Facture | null> {
+        const factureRepository = this.db.getRepository(Facture);
+        const facture = await factureRepository.findOne({
+            where: { id: factureId },
+            relations: ["immobilier", "intervention", "emetteur", "receveur"]
+        });
+        return facture || null;
+    }
+    async getFacturesByUserId(userId: number): Promise<Facture[]> {
+        const factureRepository = this.db.getRepository(Facture);
+        
+        const factures = await factureRepository.find({
+            where: [
+                { emetteur: { id: userId } },
+                { receveur: { id: userId } }
+            ],
+            relations: ["immobilier", "intervention", "emetteur", "receveur"]
+        });
+
+        return factures;
+    }
+    
     
 }

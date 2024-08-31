@@ -4,6 +4,7 @@ import { Immobilier } from './immobilier';
 import { Facture } from './facture';
 import { Devis } from './devis';
 import { Document } from './document';
+import { InterventionPrestation } from './interventionPrestation';
 
 @Entity()
 export class Intervention {
@@ -19,8 +20,8 @@ export class Intervention {
   @UpdateDateColumn()
   dateFin: Date;
 
-  @OneToMany(() => Prestation, prestation => prestation.intervention)
-  prestations: Prestation[];
+  @OneToMany(() => InterventionPrestation, interventionPrestation => interventionPrestation.intervention)
+  interventionPrestations: InterventionPrestation[];
 
   @ManyToOne(() => Immobilier, immobilier => immobilier.interventions)
   immobilier: Immobilier;
@@ -34,30 +35,40 @@ export class Intervention {
   @OneToMany(() => Document, document => document.intervention)
   documents: Document[];
 
-  @Column('decimal')
+  @Column('decimal',{ precision: 10, scale: 2 })
   price: number;
+
+  @Column({default: false})
+  paye: boolean;
+
+  @Column({nullable: true})
+  paymentSessionId: string; 
 
   constructor(
     id: number,
     name: string,
     dateDebut: Date,
     dateFin: Date,
-    prestations: Prestation[],
+    interventionPrestations: InterventionPrestation[],
     immobilier: Immobilier,
     facture: Facture,
     devis: Devis,
     documents: Document[],
-    price: number
+    price: number,
+    paye: boolean,
+    paymentSessionId: string
   ) {
     this.id = id;
     this.name = name;
     this.dateDebut = dateDebut;
     this.dateFin = dateFin;
-    this.prestations = prestations;
+    this.interventionPrestations = interventionPrestations;
     this.immobilier = immobilier;
     this.facture = facture;
     this.devis = devis;
     this.documents = documents;
     this.price = price;
+    this.paye = paye;
+    this.paymentSessionId = paymentSessionId;
   }
 }

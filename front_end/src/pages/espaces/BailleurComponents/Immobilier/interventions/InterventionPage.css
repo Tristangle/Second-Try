@@ -1,0 +1,161 @@
+/* InterventionPage.css */
+
+/* Conteneur principal */
+.interventions-page {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Titre */
+.interventions-page h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* Section pour ajouter une intervention */
+.new-intervention-form {
+    margin-bottom: 40px;
+}
+
+.new-intervention-form h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.new-intervention-form input[type="text"],
+.new-intervention-form input[type="date"],
+.new-intervention-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.new-intervention-form button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.new-intervention-form button:hover {
+    background-color: #218838;
+}
+
+.new-intervention-form .icon {
+    margin-right: 8px;
+}
+
+/* Section pour ajouter une prestation */
+.add-prestation-to-intervention {
+    margin-bottom: 40px;
+}
+
+.add-prestation-to-intervention h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.add-prestation-to-intervention select,
+.add-prestation-to-intervention input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.add-prestation-to-intervention button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.add-prestation-to-intervention button:hover {
+    background-color: #0069d9;
+}
+
+/* Section liste des interventions */
+.interventions-list h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.interventions-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.interventions-list th,
+.interventions-list td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.interventions-list th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+}
+
+.interventions-list td {
+    vertical-align: middle;
+    color: #555;
+}
+
+.interventions-list .icon {
+    cursor: pointer;
+    margin-right: 10px;
+    transition: color 0.3s;
+}
+
+.interventions-list .edit-icon {
+    color: #007bff;
+}
+
+.interventions-list .edit-icon:hover {
+    color: #0056b3;
+}
+
+.interventions-list .delete-icon {
+    color: #dc3545;
+}
+
+.interventions-list .delete-icon:hover {
+    color: #c82333;
+}
+.pay-button {
+    background-color: #6772e5;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.pay-button:hover {
+    background-color: #5469d4;
+}

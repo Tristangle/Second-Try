@@ -6,10 +6,11 @@ export interface createPrestationValidationRequest {
   description: string;
   cost: number;
   date: Date;
-  interventionId: number;
+  exploratorOnly: boolean;
+  interventionId?: number; 
   prestataireId: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 // Create Prestation Validation
@@ -18,7 +19,8 @@ export const createPrestationValidation = Joi.object<createPrestationValidationR
   description: Joi.string().required(),
   cost: Joi.number().required(),
   date: Joi.date().required(),
-  interventionId: Joi.number().integer().required(),
+  exploratorOnly : Joi.boolean().required(),
+  interventionId: Joi.number().integer().optional(),  // Optional lors de la création
   prestataireId: Joi.number().integer().required(),
   createdAt: Joi.date().optional(),
   updatedAt: Joi.date().optional()
@@ -30,9 +32,10 @@ export interface updatePrestationValidationRequest {
   description?: string;
   cost?: number;
   date?: Date;
+  exploratorOnly?: boolean;
   interventionId?: number;
   prestataireId?: number;
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
 // Update Prestation Validation
@@ -41,7 +44,20 @@ export const updatePrestationValidation = Joi.object<updatePrestationValidationR
   description: Joi.string().optional(),
   cost: Joi.number().optional(),
   date: Joi.date().optional(),
-  interventionId: Joi.number().integer().optional(),
+  exploratorOnly: Joi.boolean().optional(),
+  interventionId: Joi.number().integer().optional(),  // Peut être mis à jour
   prestataireId: Joi.number().integer().optional(),
   updatedAt: Joi.date().optional()
+});
+
+// Interface pour la requête de pagination des prestations
+export interface prestationListValidationRequest {
+  page?: number;
+  result?: number;
+}
+
+// Schéma de validation pour la pagination des prestations
+export const prestationListValidation = Joi.object<prestationListValidationRequest>({
+  page: Joi.number().min(1).optional(),
+  result: Joi.number().min(1).optional()
 });

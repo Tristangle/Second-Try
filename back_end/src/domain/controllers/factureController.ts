@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import { factureUseCase } from "../usecases/facture-usecase";
 import { AppDataSource } from "../../database/database";
 import { createFactureValidation, updateFactureValidation } from "../../handlers/validators/facture-validation";
+import { PDFService } from '../services/PDFService';
 
 export class factureController {
     private factureUsecase: factureUseCase;
-
+    
     constructor() {
         this.factureUsecase = new factureUseCase(AppDataSource);
     }
@@ -37,6 +38,39 @@ export class factureController {
             return res.status(500).json({ error: "Internal Server Error", details: (err as Error).message });
         }
     }
+    async downloadFacturePDF(req: Request, res: Response): Promise<Response> {
+        try {
+            const factureId = parseInt(req.params.id);
+            const facture = await this.factureUsecase.getFactureById(factureId);
+            if (!facture) {
+                return res.status(404).json({ error: "Facture non trouvée" });
+            }
+    
+            const pdfService = new PDFService();
+            const pdfBuffer = pdfService.generateInvoicePDF(facture);
+    
+            res.setHeader('Content-Disposition', `attachment; filename=Facture_${facture.id}.pdf`);
+            res.setHeader('Content-Type', 'application/pdf');
+            return res.send(Buffer.from(pdfBuffer));
+        } catch (err) {
+            return res.status(500).json({ error: "Erreur lors du téléchargement de la facture", details: (err as Error).message });
+        }
+    }
+    async getFacturesByUser(req: Request, res: Response): Promise<Response> {
+        try {
+            const userId = parseInt(req.params.userId);
+
+            const factures = await this.factureUsecase.getFacturesByUserId(userId);
+            if (!factures || factures.length === 0) {
+                return res.status(404).json({ error: "Aucune facture trouvée pour cet utilisateur." });
+            }
+
+            return res.status(200).json(factures);
+        } catch (err) {
+            return res.status(500).json({ error: "Erreur lors de la récupération des factures", details: (err as Error).message });
+        }
+    }
+    
 
     // Delete Facture
     async deleteFacture(req: Request, res: Response): Promise<Response> {
@@ -47,5 +81,6 @@ export class factureController {
             return res.status(500).json({ error: "Internal Server Error", details: (err as Error).message });
         }
     }
+    
 }
 export const factureControllerInstance = new factureController();

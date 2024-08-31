@@ -1,0 +1,54 @@
+.prestations-tab-container {
+    padding: 20px;
+}
+
+.prestations-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.prestation-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 20px;
+    width: calc(33% - 40px); /* 3 cartes par ligne */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.prestation-card h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.prestation-card p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.notation-section {
+    margin-top: 20px;
+}
+
+.notation-section input,
+.notation-section textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.notation-section textarea {
+    resize: vertical;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 20px;
+}

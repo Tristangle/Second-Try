@@ -19,17 +19,27 @@ export class Reservation {
   @ManyToOne(() => Immobilier, immobilier => immobilier.reservations)
   immobilier: Immobilier;
 
+  @Column('decimal', {default:0})
+  totalCost: number; 
+
+  @Column({nullable: true})
+  paymentSessionId: string; 
+
   constructor(
     id: number,
     dateDebut: Date,
     dateFin: Date,
     reserveur: User,
-    immobilier: Immobilier
+    immobilier: Immobilier,
+    totalCost: number,
+    paymentSessionId: string
   ) {
     this.id = id;
     this.dateDebut = dateDebut;
     this.dateFin = dateFin;
     this.reserveur = reserveur;
     this.immobilier = immobilier;
+    this.totalCost = totalCost;
+    this.paymentSessionId = paymentSessionId;
   }
 }

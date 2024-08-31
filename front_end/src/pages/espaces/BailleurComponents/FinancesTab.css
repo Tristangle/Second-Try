@@ -1,0 +1,41 @@
+.finances-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .finance-card-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+  }
+  
+  .finance-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 45%;
+  }
+  
+  .finance-card h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .finance-card p {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  .finance-card ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .finance-card ul li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    text-align: left;
+  }
+  

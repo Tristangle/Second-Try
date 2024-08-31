@@ -7,9 +7,13 @@ import { User } from "../../database/entities/user";
 import { devisValidationRequest, updateDevisValidationRequest } from "../../handlers/validators/devis-validation";
 import { documentUseCase } from "./document-usecase";
 import { Intervention } from "../../database/entities/intervention";
+import { EmailService } from "../services/EmailService";
 
 export class devisUseCase {
-    constructor(private readonly db: DataSource) { }
+    private emailService: EmailService;
+    constructor(private readonly db: DataSource) {
+        this.emailService = new EmailService();
+     }
 
     // Create Devis
     async createDevis(createDevis: devisValidationRequest): Promise<Devis>{
@@ -48,7 +52,7 @@ export class devisUseCase {
         };
         const fileUrl = `${process.env.SERVER_URL}:${process.env.PORT}/devis/${createDevis.userId}/${savedDevis.id}`;
         await documentUsecase.createDocument(docDataTransfert, fileUrl);
-    
+        await this.emailService.sendInvoiceOrDevis(user.email, savedDevis);
         return savedDevis;
     }
     // Update Devis
@@ -106,5 +110,15 @@ export class devisUseCase {
             await devisRepository.remove(devisSearch);
         }
     }
+        // Get Devis by User ID
+        async getDevisByUserId(userId: number): Promise<Devis[]> {
+            const devisRepository = this.db.getRepository(Devis);
     
+            const devisList = await devisRepository.find({
+                where: { user: { id: userId } },
+                relations: ["immobilier", "user"] // Ajustez les relations si nécessaire
+            });
+    
+            return devisList;
+        }
 }

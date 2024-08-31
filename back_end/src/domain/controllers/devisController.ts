@@ -47,5 +47,15 @@ export class devisController {
             return res.status(500).json({ error: "Internal Server Error", details: (err as Error).message });
         }
     }
+        // Get Devis by User ID
+        async getDevisByUserId(req: Request, res: Response): Promise<Response> {
+            try {
+                const userId = parseInt(req.params.userId);
+                const devisList = await this.devisUsecase.getDevisByUserId(userId);
+                return res.status(200).json(devisList);
+            } catch (err) {
+                return res.status(500).json({ error: "Internal Server Error", details: (err as Error).message });
+            }
+        }
 }
 export const devisControllerInstance = new devisController();

@@ -6,6 +6,7 @@ import { Inspection } from '../../database/entities/inspection';
 import { Intervention } from '../../database/entities/intervention';
 import { User } from '../../database/entities/user';
 import { documentCreateValidationRequest } from '../../handlers/validators/document-validation';
+import { UserDocumentUseCase } from './userDocument-usecase';
 
 export interface listDocumentFilter {
   page: number;
@@ -13,7 +14,11 @@ export interface listDocumentFilter {
 }
 
 export class documentUseCase {
-  constructor(private readonly db: DataSource) {}
+  private userDocumentUseCase: UserDocumentUseCase;
+
+  constructor(private readonly db: DataSource) {
+    this.userDocumentUseCase = new UserDocumentUseCase(db);
+  }
 
   async documentList(listDocumentFilter: listDocumentFilter): Promise<{ document: Document[] }> {
     const query = this.db.createQueryBuilder(Document, 'document');
@@ -64,7 +69,13 @@ export class documentUseCase {
         newDocument.type = DocumentType.Inspection;
     }
 
-    return await documentRepository.save(newDocument as Document);
+    const savedDocument = await documentRepository.save(newDocument as Document);
+
+    await this.userDocumentUseCase.createUserDocument({
+      userId: user.id,
+      documentId: savedDocument.id
+  });
+  return savedDocument;
 }
 
 
@@ -83,6 +94,9 @@ export class documentUseCase {
     const documentRepository = this.db.getRepository(Document);
     const documentSearch =  await documentRepository.findOneBy({id: documentId});
     if(documentSearch){
+      for (const userDocument of documentSearch.userDocuments) {
+        await this.userDocumentUseCase.deleteUserDocument(userDocument.id);
+      }
         await documentRepository.remove(documentSearch);
     }
 }

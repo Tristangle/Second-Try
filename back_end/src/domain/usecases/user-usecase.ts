@@ -13,6 +13,8 @@ import { Document } from "../../database/entities/document";
 import { factureUseCase } from "./facture-usecase";
 import { abonnementUseCase } from "./abonnement-usecase";
 import { UserAbonnementUseCase } from "./userAbonnement-usecase";
+import { Prestation } from "../../database/entities/prestation";
+import { prestationUseCase } from "./prestation-usecase";
 export interface listUserFilter{
     page: number,
     result: number
@@ -51,7 +53,8 @@ export class UserUsecase {
         const immobilierRepository = this.db.getRepository(Immobilier);
         const factureRepository = this.db.getRepository(Facture);
         const userAbonnementRepository = this.db.getRepository(UserAbonnement);
-    
+        
+        const prestationUsecase = new prestationUseCase(AppDataSource); 
         const immobilierUsecase = new immobilierUseCase(AppDataSource);
         const documentUsecase = new documentUseCase(AppDataSource);
         const factureUsecase = new factureUseCase(AppDataSource);
@@ -65,7 +68,8 @@ export class UserUsecase {
                 "ownedProperties",
                 "rentedProperties",
                 "facturesRecues",
-                "userAbonnement"
+                "userAbonnement",
+                "prestations"
             ]
         });
     
@@ -111,6 +115,14 @@ export class UserUsecase {
                 await factureUsecase.deleteFacture(facture.id);
             }
         }
+
+        // Utiliser le use case pour supprimer les prestations associées à l'utilisateur
+        if (userSearch.prestations && userSearch.prestations.length > 0) {
+            for (const prestation of userSearch.prestations) {
+                await prestationUsecase.deletePrestation(prestation.id);
+            }
+        }
+
     
         // Supprimer l'utilisateur
         await userRepository.remove(userSearch);

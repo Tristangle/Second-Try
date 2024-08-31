@@ -1,0 +1,33 @@
+.admin-page {
+    padding: 20px;
+  }
+  
+  .tabs {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .tabs button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .tabs button.active {
+    background-color: #333;
+    color: white;
+  }
+  
+  .tabs button:hover:not(.active) {
+    background-color: #ddd;
+  }
+  
+  .tab-content {
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+  }
+  

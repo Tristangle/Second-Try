@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from './auth/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 interface User {
   id: number;

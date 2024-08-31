@@ -14,18 +14,61 @@ import { interventionUseCase } from "./intervention-usecase";
 import { reservationUseCase } from "./reservation-usecase";
 import { factureUseCase } from "./facture-usecase";
 import { inspectionUseCase } from "./inspection-usecase";
+import { Pending } from "@mui/icons-material";
 
 export class immobilierUseCase {
     constructor(private readonly db: DataSource) {}
 
         // List Immobilier
-        async immobilierList(listImmobilier: immobilierListValidationRequest): Promise<{immobilier: Immobilier[]}>{
+        async immobilierListAdmin(listImmobilier: immobilierListValidationRequest): Promise<{immobilier: Immobilier[]}>{
             const query = this.db.getRepository(Immobilier)
                 .createQueryBuilder('immobilier')
                 .take(listImmobilier.result);
             
                 const listeImmobilier = await query.getMany();
                 return {immobilier: listeImmobilier};
+        }
+// Usecase: immobilierUsecase.ts
+
+    async getImmobiliersByOwnerId(listImmobilier: immobilierListValidationRequest, ownerId: number): Promise<Immobilier[]> {
+        const query = this.db.getRepository(Immobilier)
+            .createQueryBuilder('immobilier')
+            .where('immobilier.ownerId = :ownerId', { ownerId })
+            .take(listImmobilier.result) 
+
+        const listeImmobilier = await query.getMany();
+    return listeImmobilier;
+}
+async getImmobiliersByRenterId(renterId: number): Promise<Immobilier[]> {
+    const query = this.db.getRepository(Immobilier)
+        .createQueryBuilder('immobilier')
+        .where('immobilier.renterId = :renterId', { renterId });
+
+    const listeImmobilier = await query.getMany();
+    return listeImmobilier;
+}
+
+
+    // List Immobilier
+    async immobilierList(listImmobilier: immobilierListValidationRequest): Promise<{ immobilier: Immobilier[] }> {
+        const query = this.db.getRepository(Immobilier)
+            .createQueryBuilder('immobilier')
+            .where('immobilier.status = :status', { status: 'approved' })  // Only select approved immobiliers
+
+        // Add pagination if needed
+        query.take(listImmobilier.result)
+
+        const listeImmobilier = await query.getMany();
+        return { immobilier: listeImmobilier };
+    }
+        async getImmobilierById(immobilierId: number): Promise<Immobilier | null> {
+            const immobilierRepository = this.db.getRepository(Immobilier);
+            const immobilier = await immobilierRepository.findOne({
+                where: { id: immobilierId },
+                relations: ["owner", "renter", "images", "devis", "interventions", "reservations", "inspections", "factures"]
+            });
+    
+            return immobilier || null;
         }
         // Create Immobilier
         async createImmobilier(createImmobilier: createImmobilierValidationRequest): Promise<Immobilier> {
@@ -39,6 +82,8 @@ export class immobilierUseCase {
             const newImmobilier = immobilierRepository.create({
                 ...createImmobilier,
                 owner: owner,
+                dailyCost: createImmobilier.dailyCost,
+                status: 'pending'
             });
         
             return immobilierRepository.save(newImmobilier);
@@ -47,13 +92,13 @@ export class immobilierUseCase {
             const immobilierRepository = this.db.getRepository(Immobilier);
             const userRepository = this.db.getRepository(User);
             const imageRepository = this.db.getRepository(Image);
-    
+        
             const immobilier = await immobilierRepository.findOneBy({ id: immobilierId });
-    
+        
             if (!immobilier) {
                 return null;
             }
-    
+        
             // Update owner if provided
             if (updateImmobilier.ownerId) {
                 const owner = await userRepository.findOneBy({ id: updateImmobilier.ownerId });
@@ -62,7 +107,7 @@ export class immobilierUseCase {
                 }
                 immobilier.owner = owner;
             }
-    
+        
             // Update renter if provided
             if (updateImmobilier.renterId) {
                 const renter = await userRepository.findOneBy({ id: updateImmobilier.renterId });
@@ -71,40 +116,45 @@ export class immobilierUseCase {
                 }
                 immobilier.renter = renter;
             }
-    
+        
             // Update other fields
             if (updateImmobilier.name) {
                 immobilier.name = updateImmobilier.name;
             }
-    
+        
             if (updateImmobilier.content) {
                 immobilier.content = {
                     description: updateImmobilier.content.description || immobilier.content.description,
                     adresse: updateImmobilier.content.adresse || immobilier.content.adresse
                 };
             }
-    
+        
+            // Update daily cost if provided
+            if (updateImmobilier.dailyCost !== undefined) {
+                immobilier.dailyCost = updateImmobilier.dailyCost;
+            }
+        
             // Update associations like factures, devis, etc.
             if (updateImmobilier.factures) {
                 immobilier.factures = await this.db.getRepository(Facture).findByIds(updateImmobilier.factures);
             }
-    
+        
             if (updateImmobilier.devis) {
                 immobilier.devis = await this.db.getRepository(Devis).findByIds(updateImmobilier.devis);
             }
-    
+        
             if (updateImmobilier.interventions) {
                 immobilier.interventions = await this.db.getRepository(Intervention).findByIds(updateImmobilier.interventions);
             }
-    
+        
             if (updateImmobilier.reservations) {
                 immobilier.reservations = await this.db.getRepository(Reservation).findByIds(updateImmobilier.reservations);
             }
-    
+        
             if (updateImmobilier.inspections) {
                 immobilier.inspections = await this.db.getRepository(Inspection).findByIds(updateImmobilier.inspections);
             }
-    
+        
             // Update images based on URLs provided
             if (updateImmobilier.images) {
                 const images = await imageRepository.findBy({
@@ -112,9 +162,36 @@ export class immobilierUseCase {
                 });
                 immobilier.images = images;
             }
-    
+        
             return await immobilierRepository.save(immobilier);
         }
+
+            // Approve Immobilier
+    async approveImmobilier(immobilierId: number): Promise<Immobilier> {
+        const immobilierRepository = this.db.getRepository(Immobilier);
+        const immobilier = await immobilierRepository.findOneBy({ id: immobilierId });
+
+        if (!immobilier) {
+            throw new Error("Immobilier not found");
+        }
+
+        immobilier.status = 'approved';
+        return immobilierRepository.save(immobilier);
+    }
+
+    // Reject Immobilier
+    async rejectImmobilier(immobilierId: number): Promise<Immobilier> {
+        const immobilierRepository = this.db.getRepository(Immobilier);
+        const immobilier = await immobilierRepository.findOneBy({ id: immobilierId });
+
+        if (!immobilier) {
+            throw new Error("Immobilier not found");
+        }
+
+        immobilier.status = 'rejected';
+        return immobilierRepository.save(immobilier);
+    }
+        
         
         async deleteImmobilier(immobilierId: number): Promise<void> {
             const immobilierRepository = this.db.getRepository(Immobilier);
@@ -175,5 +252,60 @@ export class immobilierUseCase {
                 await immobilierRepository.remove(immobilierSearch);
             }
         }
+        async calculateRevenue(userId: number): Promise<{ totalRevenue: number, details: { immobilierId: number, reservationId: number, amount: number }[] }> {
+            const reservationRepository = this.db.getRepository(Reservation);
+            const immobilierRepository = this.db.getRepository(Immobilier);
+        
+            const immobiles = await immobilierRepository.find({ where: { owner: { id: userId } } });
+        
+            let totalRevenue = 0;
+            const details = [];
+        
+            for (const immobilier of immobiles) {
+                const reservations = await reservationRepository.find({ where: { immobilier: { id: immobilier.id } } });
+                for (const reservation of reservations) {
+                    const amount = Number(reservation.totalCost);
+                    totalRevenue += amount;
+                    details.push({
+                        immobilierId: immobilier.id,
+                        reservationId: reservation.id,
+                        amount,
+                    });
+                }
+            }
+        
+            return { totalRevenue, details };
+        }
+        
+        
+        async calculateExpenses(userId: number): Promise<{ totalExpenses: number, details: { immobilierId: number, interventionId: number, amount: number }[] }> {
+            const interventionRepository = this.db.getRepository(Intervention);
+            const immobilierRepository = this.db.getRepository(Immobilier);
+        
+            const immobiles = await immobilierRepository.find({ where: { owner: { id: userId } } });
+        
+            let totalExpenses = 0;
+            const details = [];
+        
+            for (const immobilier of immobiles) {
+                const interventions = await interventionRepository.find({
+                    where: { immobilier: { id: immobilier.id }, paye: true },
+                });
+        
+                for (const intervention of interventions) {
+                    const amount = Number(intervention.price);
+                    totalExpenses += amount;
+                    details.push({
+                        immobilierId: immobilier.id,
+                        interventionId: intervention.id,
+                        amount,
+                    });
+                }
+            }
+        
+            return { totalExpenses, details };
+        }
+        
+        
         
 }

@@ -1,0 +1,55 @@
+.prestations-tab {
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header h2 {
+    margin: 0;
+  }
+  
+  .icon {
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-left: 10px;
+  }
+  
+  .add-icon {
+    color: green;
+  }
+  
+  .edit-icon {
+    color: #007bff;
+  }
+  
+  .delete-icon {
+    color: red;
+  }
+  
+  .prestations-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .prestations-table th,
+  .prestations-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .prestations-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: space-around;
+  }
+  

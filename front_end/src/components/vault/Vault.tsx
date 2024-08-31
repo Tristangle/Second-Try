@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import DocumentUploader from './DocumentUploader';
 
 interface Document {
@@ -51,7 +51,7 @@ const Vault: React.FC = () => {
   return (
     <div>
       <h2>Coffre-fort numérique</h2>
-      {auth.user.role === 'admin' && (
+      {auth.user.role === 1 && (
         <div>
           <p>Accès complet pour l'Admin.</p>
           <button onClick={handleToggleUploader}>

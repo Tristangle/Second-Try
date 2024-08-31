@@ -1,0 +1,84 @@
+.bannissements-tab {
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header h2 {
+    margin: 0;
+  }
+  
+  .icon {
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-left: 10px;
+  }
+  
+  .add-icon {
+    color: green;
+  }
+  
+  .edit-icon {
+    color: #007bff;
+  }
+  
+  .delete-icon {
+    color: red;
+  }
+  
+  .bannissements-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .bannissements-table th,
+  .bannissements-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .bannissements-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  /* Additional styles specific to bannissements */
+  .bannissements-table td.status {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .bannissements-table td.reason {
+    color: #ff0000;
+  }
+  
+  .bannissements-table td.date {
+    font-style: italic;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .modal-actions button {
+    margin-left: 10px;
+  }
+  

@@ -9,6 +9,8 @@ import "reflect-metadata"
 import { swaggerDocs } from "./swagger/swagger";
 import { abonnementManager } from "./schedulers/abonnementManager";
 import { AbonnementManager } from "./schedulers/abonnementManager";
+import { BannissementManager } from "./schedulers/bannissementManager";
+import { ReservationManager } from "./schedulers/reservationManager";
 
 const main = async () => {
     const app = express()
@@ -28,7 +30,12 @@ const main = async () => {
         await AppDataSource.initialize()
         console.error("well connected to database")
         const subManager = new AbonnementManager();
+        const banManager = new BannissementManager();
+        const reservManager = new ReservationManager();
         subManager.start();
+        banManager.start();
+        reservManager.start();
+        
     } catch (error) {
         console.log(error)
         console.error("Cannot contact database")

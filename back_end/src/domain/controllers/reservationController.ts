@@ -36,6 +36,19 @@ export class reservationController {
             return res.status(500).json({ error: "Internal Server Error", details: (err as Error).message });
         }
     }
+        // Créer une réservation
+        async createAdminReservation(req: Request, res: Response): Promise<Response> {
+            try {
+                const { error } = createReservationValidation.validate(req.body);
+                if (error) return res.status(400).json({ error: error.details[0].message });
+    
+                const newReservation = await this.reservationUsecase.createReservationWithoutStripe(req.body);
+                return res.status(201).json(newReservation);
+            } catch (err) {
+                return res.status(500).json({ error: "Internal Server Error", details: (err as Error).message });
+            }
+        }
+    
 
     // Mettre à jour une réservation
     async updateReservation(req: Request, res: Response): Promise<Response> {

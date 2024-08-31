@@ -1,0 +1,54 @@
+.apartment-search-page {
+    padding: 20px;
+  }
+  
+  .search-bar {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  
+  .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .filters label {
+    font-weight: bold;
+  }
+  
+  .apartment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .apartment-card {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .apartment-card h2 {
+    margin-top: 0;
+  }
+  .reservation-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .reservation-button:hover {
+    background-color: #0056b3;
+  }
+  
+  

@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import { AppDataSource } from '../database/database';
-import { UserAbonnement,UserAbonnementStatus } from '../database/entities/userAbonnement';
+import { UserAbonnement, UserAbonnementStatus } from '../database/entities/userAbonnement';
 import { UserAbonnementUseCase } from '../domain/usecases/userAbonnement-usecase';
 import { Abonnement } from '../database/entities/abonnement';
 import { LessThanOrEqual } from 'typeorm';
@@ -42,12 +42,12 @@ export class AbonnementManager {
             }
 
             for (const userAbonnement of expiredAbonnements) {
+                // Mettre à jour l'abonnement de l'utilisateur vers l'abonnement Free
                 await this.userAbonnementUseCase.updateUserAbonnement(userAbonnement.user.id, {
                     abonnementId: freeAbonnement.id,
                     startDate: new Date(),
-                    endDate: undefined, // Abonnement Free à vie
-                    updatedAt: new Date()
-                });
+                    endDate: undefined // Abonnement Free à vie
+                }, false); // isAnnual est à false pour l'abonnement Free
 
                 console.log(`L'abonnement de l'utilisateur ${userAbonnement.user.id} a été mis à jour vers l'abonnement Free.`);
             }
