@@ -11,7 +11,7 @@ interface Immobilier {
   content: {
     description: string;
     adresse: string;
-  };
+  } | null; // Content peut être null ou undefined
   ownerId: number;
   renterId?: number;
   dailyCost: number;
@@ -30,14 +30,7 @@ interface Facture {
     username: string;
     email: string;
   } | null;
-  immobilier: {
-    id: number;
-    name: string;
-    content: {
-      adresse: string;
-      description: string;
-    };
-  } | null;
+  immobilier: Immobilier | null;
   intervention: {
     id: number;
     name: string;
@@ -52,14 +45,7 @@ interface Devis {
   id: number;
   name: string;
   date: string;
-  immobilier: {
-    id: number;
-    name: string;
-    content: {
-      adresse: string;
-      description: string;
-    };
-  } | null;
+  immobilier: Immobilier | null;
   user: {
     id: number;
     username: string;
@@ -98,6 +84,7 @@ const LoueurPage: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
+      console.log(response.data);
       setImmobilier(response.data);
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'immobilier:', error);
@@ -160,10 +147,10 @@ const LoueurPage: React.FC = () => {
       {immobilier ? (
         <div className="immobilier-card">
           <h3>{immobilier.name}</h3>
-          <p>{immobilier.content.description}</p>
-          <p>Adresse: {immobilier.content.adresse}</p>
-          <p>Coût journalier: {immobilier.dailyCost} €</p>
-          <p>Status: {immobilier.status}</p>
+          <p>{immobilier.content?.description || 'Description non disponible'}</p>
+          <p>Adresse: {immobilier.content?.adresse || 'Adresse non disponible'}</p>
+          <p>Coût journalier: {immobilier.dailyCost ? `${immobilier.dailyCost} €` : 'Non disponible'}</p>
+          <p>Status: {immobilier.status || 'Non disponible'}</p>
         </div>
       ) : (
         <p>Vous n'êtes pas actuellement en train de louer un immobilier.</p>
@@ -179,7 +166,7 @@ const LoueurPage: React.FC = () => {
             <p>Émetteur: {facture.emetteur?.username || 'N/A'} ({facture.emetteur?.email})</p>
             <p>Receveur: {facture.receveur?.username || 'N/A'}</p>
             {facture.immobilier && (
-              <p>Immobilier: {facture.immobilier.name} - {facture.immobilier.content.adresse}</p>
+              <p>Immobilier: {facture.immobilier.name} - {facture.immobilier.content?.adresse || 'Adresse non disponible'}</p>
             )}
             {facture.intervention && (
               <p>Intervention: {facture.intervention.name} - {facture.intervention.price} €</p>
@@ -197,7 +184,7 @@ const LoueurPage: React.FC = () => {
             <p>Date: {new Date(devis.date).toLocaleDateString()}</p>
             <p>User: {devis.user?.username || 'N/A'} ({devis.user?.email})</p>
             {devis.immobilier && (
-              <p>Immobilier: {devis.immobilier.name} - {devis.immobilier.content.adresse}</p>
+              <p>Immobilier: {devis.immobilier.name} - {devis.immobilier.content?.adresse || 'Adresse non disponible'}</p>
             )}
             <p>Prix: {devis.content.price} €</p>
           </div>
@@ -215,7 +202,7 @@ const LoueurPage: React.FC = () => {
       <Navbar />
       <div className="loueur-tab-container">
         {error && <p className="error-message">{error}</p>}
-  
+
         <div className="tabs">
           <button
             className={`tab-button ${activeTab === 'immobilier' ? 'active' : ''}`}
@@ -230,7 +217,7 @@ const LoueurPage: React.FC = () => {
             Prestations
           </button>
         </div>
-  
+
         <div className="tab-content">
           {activeTab === 'immobilier' && renderImmobilierTab()}
           {activeTab === 'prestations' && renderPrestationsTab()}
@@ -238,6 +225,6 @@ const LoueurPage: React.FC = () => {
       </div>
     </div>
   );
-};  
+};
 
 export default LoueurPage;
